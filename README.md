@@ -45,10 +45,10 @@ SkillSync is a revolutionary talent matching platform that focuses on verified s
 - TypeScript
 
 ### Database
-- SQL database with Drizzle ORM
+- NEON DB as PostgreSQL database with Drizzle ORM
 
 ### Deployment
-- Vercel for hosting
+- Vercel for serverless hosting
 - API routes with serverless functions
 
 ## 🚀 Getting Started
@@ -129,7 +129,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👥 Team
 
-[Coming Soon] Information about the team behind SkillSync will be added here.
+meet the team behind SkillSync : 
+
+@p4r1ch4y System Design / backend and DB dev
+@Seplestr Full Stack / Front End
+@ArpanOP11 Full Stack / 
 
 ## 📞 Contact
 
