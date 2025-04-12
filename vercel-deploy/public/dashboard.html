@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalentSync - Dashboard</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #ddd;
+    }
+    .header h1 {
+      color: #4f46e5;
+      margin: 0;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+    .user-name {
+      margin-right: 1rem;
+      font-weight: 500;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #4f46e5;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .btn-danger {
+      background-color: #ef4444;
+    }
+    .btn:hover {
+      opacity: 0.9;
+    }
+    .dashboard-content {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 2rem;
+    }
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+      color: #4f46e5;
+      font-size: 1.25rem;
+    }
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-menu li {
+      margin-bottom: 0.5rem;
+    }
+    .sidebar-menu a {
+      display: block;
+      padding: 0.5rem;
+      color: #333;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background-color: #f3f4f6;
+      color: #4f46e5;
+    }
+    .main-content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+    }
+    .main-content h2 {
+      margin-top: 0;
+      color: #4f46e5;
+      font-size: 1.5rem;
+    }
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background-color: #f9fafb;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-card h3 {
+      margin: 0;
+      font-size: 2rem;
+      color: #4f46e5;
+    }
+    .stat-card p {
+      margin: 0.5rem 0 0;
+      color: #6b7280;
+    }
+    .opportunities-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .opportunity-item {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    .opportunity-item:last-child {
+      border-bottom: none;
+    }
+    .opportunity-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem;
+    }
+    .opportunity-company {
+      color: #6b7280;
+      margin: 0 0 0.5rem;
+    }
+    .opportunity-match {
+      display: inline-block;
+      background-color: #d1fae5;
+      color: #10b981;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7280;
+    }
+    .error-message {
+      color: #ef4444;
+      padding: 1rem;
+      background-color: #fee2e2;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 768px) {
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

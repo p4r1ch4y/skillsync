@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalentSync - Test Login</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .login-container {
+      max-width: 400px;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #4f46e5;
+      margin-bottom: 1rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #4f46e5;
+      color: white;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 1rem;
+      width: 100%;
+    }
+    .btn:hover {
+      background-color: #4338ca;
+    }
+    .error-message {
+      color: #ef4444;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background-color: #fee2e2;
+      border-radius: 4px;
+    }
+    .success-message {
+      color: #10b981;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background-color: #d1fae5;
+      border-radius: 4px;
+    }
+    .response-container {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f9fafb;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Test Login</h1>
+    
+    <div id="error-message" class="error-message" style="display: none;"></div>
+    <div id="success-message" class="success-message" style="display: none;"></div>
+    
+    <form id="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="testuser" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" value="password123" required>
+      </div>
+      
+      <button type="submit" class="btn">Test Login</button>
+    </form>
+    
+    <div id="response-container" class="response-container" style="display: none;">
+      <h3>Response:</h3>
+      <pre id="response-output"></pre>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('login-form');
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      const responseContainer = document.getElementById('response-container');
+      const responseOutput = document.getElementById('response-output');
+      
+      // Test API connection
+      fetch('/api/test')
+        .then(response => response.json())
+        .then(data => {
+          console.log('API test successful:', data);
+          successMessage.textContent = 'API connection successful!';
+          successMessage.style.display = 'block';
+        })
+        .catch(error => {
+          console.error('API test failed:', error);
+          errorMessage.textContent = 'API connection failed: ' + error.message;
+          errorMessage.style.display = 'block';
+        });
+      
+      loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+        responseContainer.style.display = 'none';
+        
+        try {
+          // First try the test login endpoint
+          console.log('Trying test login endpoint...');
+          const testResponse = await fetch('/api/test/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          });
+          
+          const testData = await testResponse.json();
+          console.log('Test login response:', testData);
+          
+          // Display the response
+          responseOutput.textContent = JSON.stringify(testData, null, 2);
+          responseContainer.style.display = 'block';
+          
+          if (testData.success) {
+            successMessage.textContent = 'Test login successful!';
+            successMessage.style.display = 'block';
+          } else {
+            errorMessage.textContent = testData.message || 'Test login failed';
+            errorMessage.style.display = 'block';
+          }
+          
+          // Now try the real login endpoint
+          console.log('Trying real login endpoint...');
+          const realResponse = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          });
+          
+          // Try to get the response as text first
+          const responseText = await realResponse.text();
+          console.log('Real login response text:', responseText);
+          
+          // Try to parse as JSON if possible
+          try {
+            const realData = JSON.parse(responseText);
+            console.log('Real login response JSON:', realData);
+            
+            // Append to the response output
+            responseOutput.textContent += '\n\nReal Login Response:\n' + JSON.stringify(realData, null, 2);
+          } catch (jsonError) {
+            console.error('Failed to parse real login response as JSON:', jsonError);
+            
+            // Append the raw text
+            responseOutput.textContent += '\n\nReal Login Response (not JSON):\n' + responseText;
+          }
+          
+        } catch (error) {
+          console.error('Login error:', error);
+          errorMessage.textContent = error.message || 'Login failed. Please try again.';
+          errorMessage.style.display = 'block';
+          
+          // Display error in response container
+          responseOutput.textContent = 'Error: ' + error.message;
+          responseContainer.style.display = 'block';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

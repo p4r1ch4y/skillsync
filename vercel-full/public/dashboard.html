@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalentSync - Dashboard</title>
+  <link rel="stylesheet" href="/assets/index-DtX4t95D.css">
+  <style>
+    .dashboard-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #4f46e5;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .btn-danger {
+      background-color: #ef4444;
+    }
+    .btn:hover {
+      opacity: 0.9;
+    }
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      text-align: center;
+    }
+    .stat-card h3 {
+      margin-top: 0;
+      color: #4f46e5;
+      font-size: 24px;
+    }
+    .stat-card p {
+      margin-bottom: 0;
+      color: #6b7280;
+    }
+    .activity-list {
+      list-style: none;
+      padding: 0;
+    }
+    .activity-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #6b7280;
+    }
+    .error-message {
+      color: #ef4444;
+      padding: 10px;
+      background-color: #fee2e2;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="header">
+      <h1>Dashboard</h1>
+      <div>
+        <span id="user-name">Loading...</span>
+        <button id="logout-btn" class="btn btn-danger">Logout</button>
+      </div>
+    </div>
+    
+    <div id="error-message" class="error-message" style="display: none;"></div>
+    
+    <div id="loading" class="loading">Loading dashboard data...</div>
+    
+    <div id="dashboard-content" style="display: none;">
+      <h2>Statistics</h2>
+      <div class="stats-container" id="stats-container">
+        <!-- Stats will be loaded here -->
+      </div>
+      
+      <h2>Recent Activity</h2>
+      <ul class="activity-list" id="activity-list">
+        <!-- Activity items will be loaded here -->
+      </ul>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      const userNameElement = document.getElementById('user-name');
+      const logoutBtn = document.getElementById('logout-btn');
+      const errorMessage = document.getElementById('error-message');
+      const loading = document.getElementById('loading');
+      const dashboardContent = document.getElementById('dashboard-content');
+      const statsContainer = document.getElementById('stats-container');
+      const activityList = document.getElementById('activity-list');
+      
+      // Check if user is authenticated
+      if (!TalentSyncAuth.isAuthenticated()) {
+        window.location.href = '/login.html';
+        return;
+      }
+      
+      // Get user from localStorage
+      const user = TalentSyncAuth.getUser();
+      if (user) {
+        userNameElement.textContent = user.username;
+      }
+      
+      // Handle logout
+      logoutBtn.addEventListener('click', async function() {
+        try {
+          await TalentSyncAuth.logout();
+          window.location.href = '/login.html';
+        } catch (error) {
+          showError(error.message || 'Logout failed');
+        }
+      });
+      
+      // Load dashboard data
+      try {
+        // Get current user to verify token
+        await TalentSyncAuth.getCurrentUser();
+        
+        // Get dashboard data
+        const dashboardData = await TalentSyncAuth.apiRequest('/api/dashboard');
+        
+        // Display stats
+        const stats = dashboardData.dashboard.stats;
+        statsContainer.innerHTML = `
+          <div class="stat-card">
+            <h3>${stats.projects}</h3>
+            <p>Projects</p>
+          </div>
+          <div class="stat-card">
+            <h3>${stats.tasks}</h3>
+            <p>Tasks</p>
+          </div>
+          <div class="stat-card">
+            <h3>${stats.completed}</h3>
+            <p>Completed</p>
+          </div>
+        `;
+        
+        // Display activity
+        const activity = dashboardData.dashboard.recentActivity;
+        if (activity.length === 0) {
+          activityList.innerHTML = '<li class="activity-item">No recent activity</li>';
+        } else {
+          activityList.innerHTML = activity.map(item => `
+            <li class="activity-item">
+              ${item.type.charAt(0).toUpperCase() + item.type.slice(1)} ${item.action} on ${new Date(item.date).toLocaleString()}
+            </li>
+          `).join('');
+        }
+        
+        // Show dashboard content
+        loading.style.display = 'none';
+        dashboardContent.style.display = 'block';
+      } catch (error) {
+        loading.style.display = 'none';
+        showError(error.message || 'Failed to load dashboard data');
+        
+        // If unauthorized, redirect to login
+        if (error.message === 'Authentication required' || error.message === 'Invalid or expired token') {
+          setTimeout(() => {
+            window.location.href = '/login.html';
+          }, 2000);
+        }
+      }
+      
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
