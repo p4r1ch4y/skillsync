@@ -3,8 +3,12 @@
 SkillSync is a revolutionary talent matching platform that focuses on verified skills rather than traditional resumes. By prioritizing demonstrated abilities over paper qualifications, we create a more meritocratic and efficient hiring process.
 
 ## 🎥 Demo
+Group Meet Presentation : 
+https://youtu.be/wc6xWAcrBiU?
 
-https://youtu.be/wc6xWAcrBiU?si=RVhqi3vMvRC5h2fs
+ Demo Presentation : https://youtu.be/wm9ZMgvbrlg
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/wm9ZMgvbrlg?si=SHia4Bu1yP6ZuzTB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## 📸 Screenshots
 
