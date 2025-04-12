@@ -4,7 +4,7 @@ SkillSync is a revolutionary talent matching platform that focuses on verified s
 
 ## 🎥 Demo
 
-[Coming Soon] A video demonstration of the SkillSync platform will be added here.
+https://youtu.be/wc6xWAcrBiU?si=RVhqi3vMvRC5h2fs
 
 ## 📸 Screenshots
 
